@@ -1678,8 +1678,6 @@ TEST(URLCanonTest, CanonicalizeFileURL) {
   }
 }
 
-/*
-TODO(ericu) bug 121671 this test fails.
 #ifdef FULL_FILESYSTEM_URL_SUPPORT
 TEST(URLCanonTest, CanonicalizeFileSystemURL) {
   struct URLCase {
@@ -1693,7 +1691,7 @@ TEST(URLCanonTest, CanonicalizeFileSystemURL) {
     {"filesystem:http://www.foo.com/persistent/bob?query#ref", "filesystem:http://www.foo.com/persistent/bob?query#ref", true},
     {"filesystem:fIle://\\temporary/", "filesystem:file:///temporary/", true},
     {"filesystem:fiLe:///temporary", "filesystem:file:///temporary/", true},
-    {"filesystem:file://///temporary", "filesystem:file:///temporary/", true},
+    {"filesystem:file:///////temporary", "filesystem:file:////", false},
     {"filesystem:File:///temporary/Bob?qUery#reF", "filesystem:file:///temporary/Bob?qUery#reF", true},
   };
 
@@ -1720,7 +1718,6 @@ TEST(URLCanonTest, CanonicalizeFileSystemURL) {
   }
 }
 #endif
-*/
 
 TEST(URLCanonTest, CanonicalizePathURL) {
   // Path URLs should get canonicalized schemes but nothing else.
