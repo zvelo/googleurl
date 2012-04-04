@@ -1691,7 +1691,6 @@ TEST(URLCanonTest, CanonicalizeFileSystemURL) {
     {"filesystem:http://www.foo.com/persistent/bob?query#ref", "filesystem:http://www.foo.com/persistent/bob?query#ref", true},
     {"filesystem:fIle://\\temporary/", "filesystem:file:///temporary/", true},
     {"filesystem:fiLe:///temporary", "filesystem:file:///temporary/", true},
-    {"filesystem:file:///////temporary", "filesystem:file:////", false},
     {"filesystem:File:///temporary/Bob?qUery#reF", "filesystem:file:///temporary/Bob?qUery#reF", true},
   };
 
