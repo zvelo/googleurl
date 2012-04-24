@@ -115,26 +115,24 @@ GURL::GURL(const GURL& other)
       inner_url_(NULL) {
   if (other.inner_url_)
     inner_url_ = new GURL(*other.inner_url_);
+  // Valid filesystem urls should always have an inner_url_.
+  DCHECK(!is_valid_ || !SchemeIsFileSystem() || inner_url_);
 }
 
 GURL::GURL(const std::string& url_string) : inner_url_(NULL) {
   is_valid_ = InitCanonical(url_string, &spec_, &parsed_);
-#ifdef FULL_FILESYSTEM_URL_SUPPORT
   if (is_valid_ && SchemeIsFileSystem()) {
     inner_url_ =
         new GURL(spec_.data(), parsed_.Length(), *parsed_.inner_parsed(), true);
   }
-#endif
 }
 
 GURL::GURL(const string16& url_string) : inner_url_(NULL) {
   is_valid_ = InitCanonical(url_string, &spec_, &parsed_);
-#ifdef FULL_FILESYSTEM_URL_SUPPORT
   if (is_valid_ && SchemeIsFileSystem()) {
     inner_url_ =
         new GURL(spec_.data(), parsed_.Length(), *parsed_.inner_parsed(), true);
   }
-#endif
 }
 
 GURL::GURL(const char* canonical_spec, size_t canonical_spec_len,
@@ -143,12 +141,10 @@ GURL::GURL(const char* canonical_spec, size_t canonical_spec_len,
       is_valid_(is_valid),
       parsed_(parsed),
       inner_url_(NULL) {
-#ifdef FULL_FILESYSTEM_URL_SUPPORT
   if (is_valid_ && SchemeIsFileSystem()) {
     inner_url_ =
         new GURL(spec_.data(), parsed_.Length(), *parsed_.inner_parsed(), true);
   }
-#endif
 
 #ifndef NDEBUG
   // For testing purposes, check that the parsed canonical URL is identical to
@@ -192,6 +188,8 @@ GURL& GURL::operator=(const GURL& other) {
   inner_url_ = NULL;
   if (other.inner_url_)
     inner_url_ = new GURL(*other.inner_url_);
+  // Valid filesystem urls should always have an inner_url_.
+  DCHECK(!is_valid_ || !SchemeIsFileSystem() || inner_url_);
   return *this;
 }
 
@@ -235,6 +233,10 @@ GURL GURL::ResolveWithCharsetConverter(
 
   output.Complete();
   result.is_valid_ = true;
+  if (result.SchemeIsFileSystem()) {
+    result.inner_url_ = new GURL(spec_.data(), result.parsed_.Length(),
+                                 *result.parsed_.inner_parsed(), true);
+  }
   return result;
 }
 
@@ -263,6 +265,10 @@ GURL GURL::ResolveWithCharsetConverter(
 
   output.Complete();
   result.is_valid_ = true;
+  if (result.SchemeIsFileSystem()) {
+    result.inner_url_ = new GURL(spec_.data(), result.parsed_.Length(),
+                                 *result.parsed_.inner_parsed(), true);
+  }
   return result;
 }
 
@@ -285,6 +291,10 @@ GURL GURL::ReplaceComponents(
       NULL, &output, &result.parsed_);
 
   output.Complete();
+  if (result.is_valid_ && result.SchemeIsFileSystem()) {
+    result.inner_url_ = new GURL(spec_.data(), result.parsed_.Length(),
+                                 *result.parsed_.inner_parsed(), true);
+  }
   return result;
 }
 
@@ -307,6 +317,10 @@ GURL GURL::ReplaceComponents(
       NULL, &output, &result.parsed_);
 
   output.Complete();
+  if (result.is_valid_ && result.SchemeIsFileSystem()) {
+    result.inner_url_ = new GURL(spec_.data(), result.parsed_.Length(),
+                                 *result.parsed_.inner_parsed(), true);
+  }
   return result;
 }
 
@@ -316,10 +330,8 @@ GURL GURL::GetOrigin() const {
   if (!is_valid_ || !IsStandard())
     return GURL();
 
-#ifdef FULL_FILESYSTEM_URL_SUPPORT
   if (SchemeIsFileSystem())
     return inner_url_->GetOrigin();
-#endif
 
   url_canon::Replacements<char> replacements;
   replacements.ClearUsername();
@@ -395,9 +407,14 @@ std::string GURL::PathForRequest() const {
     return std::string(spec_, parsed_.path.begin,
                        parsed_.ref.begin - parsed_.path.begin - 1);
   }
+  // Compute the actual path length, rather than depending on the spec's
+  // terminator.  If we're an inner_url, our spec continues on into our outer
+  // url's path/query/ref.
+  int path_len = parsed_.path.len;
+  if (parsed_.query.is_valid())
+    path_len = parsed_.query.end() - parsed_.path.begin;
 
-  // Use everything form the path to the end.
-  return std::string(spec_, parsed_.path.begin);
+  return std::string(spec_, parsed_.path.begin, path_len);
 }
 
 std::string GURL::HostNoBrackets() const {

@@ -61,11 +61,7 @@ inline bool DoLowerCaseEqualsASCII(Iter a_begin, Iter a_end, const char* b) {
   return *b == 0;
 }
 
-#ifdef FULL_FILESYSTEM_URL_SUPPORT
 const int kNumStandardURLSchemes = 8;
-#else
-const int kNumStandardURLSchemes = 7;
-#endif
 const char* kStandardURLSchemes[kNumStandardURLSchemes] = {
   "http",
   "https",
@@ -74,9 +70,7 @@ const char* kStandardURLSchemes[kNumStandardURLSchemes] = {
   "gopher",
   "ws",  // WebSocket.
   "wss",  // WebSocket secure.
-#ifdef FULL_FILESYSTEM_URL_SUPPORT
   kFileSystemScheme,
-#endif
 };
 
 // List of the currently installed standard schemes. This list is lazily
@@ -196,7 +190,6 @@ bool DoCanonicalize(const CHAR* in_spec, int in_spec_len,
     success = url_canon::CanonicalizeFileURL(spec, spec_len, parsed_input,
                                              charset_converter, output,
                                              output_parsed);
-#ifdef FULL_FILESYSTEM_URL_SUPPORT
   } else if (DoCompareSchemeComponent(spec, scheme, kFileSystemScheme)) {
     // Filesystem URLs are special.
     url_parse::ParseFileSystemURL(spec, spec_len, &parsed_input);
@@ -205,7 +198,6 @@ bool DoCanonicalize(const CHAR* in_spec, int in_spec_len,
                                                    charset_converter,
                                                    output, output_parsed);
 
-#endif
   } else if (DoIsStandard(spec, scheme)) {
     // All "normal" URLs.
     url_parse::ParseStandardURL(spec, spec_len, &parsed_input);
@@ -350,13 +342,11 @@ bool DoReplaceComponents(const char* spec,
     return url_canon::ReplaceFileURL(spec, parsed, replacements,
                                      charset_converter, output, out_parsed);
   }
-#ifdef FULL_FILESYSTEM_URL_SUPPORT
   if (DoCompareSchemeComponent(spec, parsed.scheme, kFileSystemScheme)) {
     return url_canon::ReplaceFileSystemURL(spec, parsed, replacements,
                                            charset_converter, output,
                                            out_parsed);
   }
-#endif
   if (DoIsStandard(spec, parsed.scheme)) {
     return url_canon::ReplaceStandardURL(spec, parsed, replacements,
                                          charset_converter, output, out_parsed);

@@ -549,7 +549,6 @@ GURL_API bool CanonicalizeFileURL(const char16* spec,
                                   CanonOutput* output,
                                   url_parse::Parsed* new_parsed);
 
-#ifdef FULL_FILESYSTEM_URL_SUPPORT
 // Use for filesystem URLs.
 GURL_API bool CanonicalizeFileSystemURL(const char* spec,
                                         int spec_len,
@@ -563,7 +562,6 @@ GURL_API bool CanonicalizeFileSystemURL(const char16* spec,
                                         CharsetConverter* query_converter,
                                         CanonOutput* output,
                                         url_parse::Parsed* new_parsed);
-#endif
 
 // Use for path URLs such as javascript. This does not modify the path in any
 // way, for example, by escaping it.
@@ -790,7 +788,6 @@ GURL_API bool ReplaceStandardURL(const char* base,
                                  CanonOutput* output,
                                  url_parse::Parsed* new_parsed);
 
-#ifdef FULL_FILESYSTEM_URL_SUPPORT
 // Filesystem URLs can only have the path, query, or ref replaced.
 // All other components will be ignored.
 GURL_API bool ReplaceFileSystemURL(const char* base,
@@ -805,7 +802,6 @@ GURL_API bool ReplaceFileSystemURL(const char* base,
                                    CharsetConverter* query_converter,
                                    CanonOutput* output,
                                    url_parse::Parsed* new_parsed);
-#endif
 
 // Replacing some parts of a file URL is not permitted. Everything except
 // the host, path, query, and ref will be ignored.

@@ -101,7 +101,6 @@ struct MailtoURLParseCase {
   const char* query;
 };
 
-#ifdef FULL_FILESYSTEM_URL_SUPPORT
 // More complicated version of URLParseCase for testing filesystem URLs.
 struct FileSystemURLParseCase {
   const char* input;
@@ -116,7 +115,6 @@ struct FileSystemURLParseCase {
   const char* query;
   const char* ref;
 };
-#endif
 
 bool ComponentMatches(const char* input,
                       const char* reference,
@@ -598,7 +596,6 @@ TEST(URLParser, MailtoUrl) {
   }
 }
 
-#ifdef FULL_FILESYSTEM_URL_SUPPORT
 // Various incarnations of filesystem URLs.
 static FileSystemURLParseCase filesystem_cases[] = {
   // Regular URL with all the parts
@@ -649,5 +646,4 @@ TEST(URLParser, FileSystemURL) {
     ExpectInvalidComponent(parsed.port);
   }
 }
-#endif
 

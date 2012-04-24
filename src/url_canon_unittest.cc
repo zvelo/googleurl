@@ -1442,7 +1442,6 @@ TEST(URLCanonTest, ReplaceFileURL) {
   }
 }
 
-#ifdef FULL_FILESYSTEM_URL_SUPPORT
 TEST(URLCanonTest, ReplaceFileSystemURL) {
   ReplaceCase replace_cases[] = {
       // Replace everything in the outer URL.
@@ -1493,7 +1492,6 @@ TEST(URLCanonTest, ReplaceFileSystemURL) {
     EXPECT_EQ(replace_cases[i].expected, out_str);
   }
 }
-#endif
 
 TEST(URLCanonTest, ReplacePathURL) {
   ReplaceCase replace_cases[] = {
@@ -1678,7 +1676,6 @@ TEST(URLCanonTest, CanonicalizeFileURL) {
   }
 }
 
-#ifdef FULL_FILESYSTEM_URL_SUPPORT
 TEST(URLCanonTest, CanonicalizeFileSystemURL) {
   struct URLCase {
     const char* input;
@@ -1716,7 +1713,6 @@ TEST(URLCanonTest, CanonicalizeFileSystemURL) {
     EXPECT_EQ(10, out_parsed.scheme.len);
   }
 }
-#endif
 
 TEST(URLCanonTest, CanonicalizePathURL) {
   // Path URLs should get canonicalized schemes but nothing else.
@@ -2031,7 +2027,6 @@ TEST(URLCanonTest, ResolveRelativeURL) {
       // Filesystem URL tests; filesystem URLs are only valid and relative if
       // they have no scheme, e.g. "./index.html".  There's no valid equivalent
       // to http:index.html.
-#ifdef FULL_FILESYSTEM_URL_SUPPORT
     {"filesystem:http://host/t/path", true, false, "filesystem:http://host/t/path2", true, false, false, NULL},
     {"filesystem:http://host/t/path", true, false, "filesystem:https://host/t/path2", true, false, false, NULL},
     {"filesystem:http://host/t/path", true, false, "http://host/t/path2", true, false, false, NULL},
@@ -2039,7 +2034,6 @@ TEST(URLCanonTest, ResolveRelativeURL) {
     {"filesystem:http://host/t/path", true, false, "./path2", true, true, true, "filesystem:http://host/t/path2"},
     {"filesystem:http://host/t/path/", true, false, "path2", true, true, true, "filesystem:http://host/t/path/path2"},
     {"filesystem:http://host/t/path", true, false, "filesystem:http:path2", true, false, false, NULL},
-#endif
   };
 
   for (size_t i = 0; i < ARRAYSIZE(rel_cases); i++) {
