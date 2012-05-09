@@ -1711,6 +1711,8 @@ TEST(URLCanonTest, CanonicalizeFileSystemURL) {
     // has different code for writing the spec.
     EXPECT_EQ(0, out_parsed.scheme.begin);
     EXPECT_EQ(10, out_parsed.scheme.len);
+    if (success)
+      EXPECT_GT(out_parsed.path.len, 0);
   }
 }
 

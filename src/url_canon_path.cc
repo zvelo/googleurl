@@ -325,9 +325,8 @@ bool DoPath(const CHAR* spec,
             CanonOutput* output,
             url_parse::Component* out_path) {
   bool success = true;
+  out_path->begin = output->length();
   if (path.len > 0) {
-    out_path->begin = output->length();
-
     // Write out an initial slash if the input has none. If we just parse a URL
     // and then canonicalize it, it will of course have a slash already. This
     // check is for the replacement and relative URL resolving cases of file
@@ -336,12 +335,11 @@ bool DoPath(const CHAR* spec,
       output->push_back('/');
 
     success = DoPartialPath<CHAR, UCHAR>(spec, path, out_path->begin, output);
-    out_path->len = output->length() - out_path->begin;
   } else {
     // No input, canonical path is a slash.
     output->push_back('/');
-    *out_path = url_parse::Component();
   }
+  out_path->len = output->length() - out_path->begin;
   return success;
 }
 
