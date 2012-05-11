@@ -29,7 +29,7 @@
 #ifndef GOOGLEURL_SRC_URL_CANON_H__
 #define GOOGLEURL_SRC_URL_CANON_H__
 
-#include <memory.h>
+#include <string.h>
 #include <stdlib.h>
 
 #include "base/string16.h"
