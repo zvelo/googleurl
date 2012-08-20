@@ -182,12 +182,6 @@ TEST(GURLTest, Invalid) {
   EXPECT_EQ("", url.ref());
 }
 
-TEST(GURLTest, NonURL) {
-  GURL url("random");
-  EXPECT_FALSE(url.is_valid());
-  EXPECT_EQ("random", url.possibly_invalid_spec());
-}
-
 TEST(GURLTest, Resolve) {
   // The tricky cases for relative URL resolving are tested in the
   // canonicalizer unit test. Here, we just test that the GURL integration

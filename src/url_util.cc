@@ -178,10 +178,8 @@ bool DoCanonicalize(const CHAR* in_spec, int in_spec_len,
 #endif
 
   url_parse::Component scheme;
-  if (!url_parse::ExtractScheme(spec, spec_len, &scheme)) {
-    AppendInvalidNarrowString(spec, 0, spec_len, output);
+  if (!url_parse::ExtractScheme(spec, spec_len, &scheme))
     return false;
-  }
 
   // This is the parsed version of the input URL, we have to canonicalize it
   // before storing it in our object.
