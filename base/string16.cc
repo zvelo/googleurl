@@ -28,6 +28,8 @@
 
 #include "base/string16.h"
 
+#include <string.h>
+
 #ifdef WIN32
 
 #error This file should not be used on 2-byte wchar_t systems
