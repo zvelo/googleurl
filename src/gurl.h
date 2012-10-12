@@ -235,7 +235,7 @@ class GURL {
 
   // If the scheme indicates a secure connection
   bool SchemeIsSecure() const {
-    return SchemeIs("https") ||
+    return SchemeIs("https") || SchemeIs("wss") ||
         (SchemeIsFileSystem() && inner_url() && inner_url()->SchemeIsSecure());
   }
 
