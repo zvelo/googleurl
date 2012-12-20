@@ -197,10 +197,9 @@ TEST(GURLTest, Resolve) {
     {"http://www.google.com/blah/bloo?c#d", "../../../hello/./world.html?a#b", true, "http://www.google.com/hello/world.html?a#b"},
     {"http://www.google.com/foo#bar", "#com", true, "http://www.google.com/foo#com"},
     {"http://www.google.com/", "Https:images.google.com", true, "https://images.google.com/"},
-      // Unknown schemes are not standard.
+      // A non-standard base can be replaced with a standard absolute URL.
     {"data:blahblah", "http://google.com/", true, "http://google.com/"},
     {"data:blahblah", "http:google.com", true, "http://google.com/"},
-    {"data:/blahblah", "file.html", false, ""},
       // Filesystem URLs have different paths to test.
     {"filesystem:http://www.google.com/type/", "foo.html", true, "filesystem:http://www.google.com/type/foo.html"},
     {"filesystem:http://www.google.com/type/", "../foo.html", true, "filesystem:http://www.google.com/type/foo.html"},

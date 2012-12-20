@@ -236,8 +236,17 @@ bool DoResolveRelative(const char* base_spec,
   const CHAR* relative = RemoveURLWhitespace(in_relative, in_relative_length,
                                              &whitespace_buffer,
                                              &relative_length);
+  bool base_is_authority_based = false;
+  bool base_is_hierarchical = false;
+  if (base_spec &&
+      base_parsed.scheme.is_nonempty()) {
+    int after_scheme = base_parsed.scheme.end() + 1;  // Skip past the colon.
+    int num_slashes = url_parse::CountConsecutiveSlashes(
+        base_spec, after_scheme, base_spec_len);
+    base_is_authority_based = num_slashes > 1;
+    base_is_hierarchical = num_slashes > 0;
+  }
 
-  // See if our base URL should be treated as "standard".
   bool standard_base_scheme =
       base_parsed.scheme.is_nonempty() &&
       DoIsStandard(base_spec, base_parsed.scheme);
@@ -246,14 +255,32 @@ bool DoResolveRelative(const char* base_spec,
   url_parse::Component relative_component;
   if (!url_canon::IsRelativeURL(base_spec, base_parsed,
                                 relative, relative_length,
-                                standard_base_scheme,
+                                (base_is_hierarchical || standard_base_scheme),
                                 &is_relative,
                                 &relative_component)) {
     // Error resolving.
     return false;
   }
 
-  if (is_relative) {
+  // Pretend for a moment that |base_spec| is a standard URL. Normally
+  // non-standard URLs are treated as PathURLs, but if the base has an
+  // authority we would like to preserve it.
+  if (is_relative && base_is_authority_based && !standard_base_scheme) {
+    url_parse::Parsed base_parsed_authority;
+    ParseStandardURL(base_spec, base_spec_len, &base_parsed_authority);
+    if (base_parsed_authority.host.is_nonempty()) {
+      bool did_resolve_succeed =
+          url_canon::ResolveRelativeURL(base_spec, base_parsed_authority,
+                                        false, relative,
+                                        relative_component, charset_converter,
+                                        output, output_parsed);
+      // The output_parsed is incorrect at this point (because it was built
+      // based on base_parsed_authority instead of base_parsed) and needs to be
+      // re-created.
+      ParsePathURL(output->data(), output->length(), output_parsed);
+      return did_resolve_succeed;
+    }
+  } else if (is_relative) {
     // Relative, resolve and canonicalize.
     bool file_base_scheme = base_parsed.scheme.is_nonempty() &&
         DoCompareSchemeComponent(base_spec, base_parsed.scheme, kFileScheme);

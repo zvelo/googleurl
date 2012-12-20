@@ -249,3 +249,62 @@ TEST(URLUtilTest, TestEncodeURIComponent) {
   }
 }
 
+TEST(URLUtilTest, TestResolveRelativeWithNonStandardBase) {
+  // This tests non-standard (in the sense that GURL::IsStandard() == false)
+  // hierarchical schemes.
+  struct ResolveRelativeCase {
+    const char* base;
+    const char* rel;
+    bool is_valid;
+    const char* out;
+  } resolve_non_standard_cases[] = {
+      // Resolving a relative path against a non-hierarchical URL should fail.
+    {"scheme:opaque_data", "/path", false, ""},
+      // Resolving a relative path against a non-standard authority-based base
+      // URL doesn't alter the authority section.
+    {"scheme://Authority/", "../path", true, "scheme://Authority/path"},
+      // A non-standard hierarchical base is resolved with path URL
+      // canoncialization rules.
+    {"data:/Blah:Blah/", "file.html", true, "data:/Blah:Blah/file.html"},
+    {"data:/Path/../part/part2", "file.html", true, "data:/Path/../part/file.html"},
+      // Path URL canonicalization rules also apply to non-standard authority-
+      // based URLs.
+    {"custom://Authority/", "file.html", true, "custom://Authority/file.html"},
+    {"custom://Authority/", "other://Auth/", true, "other://Auth/"},
+    {"custom://Authority/", "../../file.html", true, "custom://Authority/file.html"},
+    {"custom://Authority/path/", "file.html", true, "custom://Authority/path/file.html"},
+    {"custom://Authority:NoCanon/path/", "file.html", true, "custom://Authority:NoCanon/path/file.html"},
+      // It's still possible to get an invalid path URL.
+    {"custom://Invalid:!#Auth/", "file.html", false, ""},
+      // A path with an authority section gets canonicalized under standard URL
+      // rules, even though the base was non-standard.
+    {"content://content.Provider/", "//other.Provider", true, "content://other.provider/"},
+      // Resolving an absolute URL doesn't cause canonicalization of the
+      // result.
+    {"about:blank", "custom://Authority", true, "custom://Authority"},
+      // Resolving should fail if the base URL is authority-based but is
+      // missing a path component (the '/' at the end).
+    {"scheme://Authority", "path", false, ""},
+  };
+
+  for (size_t i = 0; i < ARRAYSIZE_UNSAFE(resolve_non_standard_cases); i++) {
+    const ResolveRelativeCase& test_data = resolve_non_standard_cases[i];
+    url_parse::Parsed base_parsed;
+    url_parse::ParsePathURL(test_data.base, strlen(test_data.base),
+                            &base_parsed);
+
+    std::string resolved;
+    url_canon::StdStringCanonOutput output(&resolved);
+    url_parse::Parsed resolved_parsed;
+    bool valid =
+        url_util::ResolveRelative(test_data.base, strlen(test_data.base),
+                                  base_parsed,
+                                  test_data.rel, strlen(test_data.rel),
+                                  NULL, &output, &resolved_parsed);
+    output.Complete();
+
+    EXPECT_EQ(test_data.is_valid, valid) << i;
+    if (test_data.is_valid && valid)
+      EXPECT_EQ(test_data.out, resolved) << i;
+  }
+}

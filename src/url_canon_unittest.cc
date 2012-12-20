@@ -2036,6 +2036,9 @@ TEST(URLCanonTest, ResolveRelativeURL) {
     {"filesystem:http://host/t/path", true, false, "./path2", true, true, true, "filesystem:http://host/t/path2"},
     {"filesystem:http://host/t/path/", true, false, "path2", true, true, true, "filesystem:http://host/t/path/path2"},
     {"filesystem:http://host/t/path", true, false, "filesystem:http:path2", true, false, false, NULL},
+      // Absolute URLs are still not relative to a non-standard base URL.
+    {"about:blank", false, false, "http://X/A", true, false, true, ""},
+    {"about:blank", false, false, "content://content.Provider/", true, false, true, ""},
   };
 
   for (size_t i = 0; i < ARRAYSIZE(rel_cases); i++) {
