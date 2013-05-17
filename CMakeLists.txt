@@ -38,19 +38,19 @@ SET(EXTERNAL_LIBRARIES
   ${CMAKE_BINARY_DIR}/external/lib/libicuuc.a
 )
 
-ADD_LIBRARY(google-url        SHARED ${SOURCES})
-ADD_LIBRARY(google-url-static STATIC ${SOURCES})
+ADD_LIBRARY(googleurl        SHARED ${SOURCES})
+ADD_LIBRARY(googleurl-static STATIC ${SOURCES})
 
-ADD_DEPENDENCIES(google-url icu)
-ADD_DEPENDENCIES(google-url-static icu)
+ADD_DEPENDENCIES(googleurl icu)
+ADD_DEPENDENCIES(googleurl-static icu)
 
-TARGET_LINK_LIBRARIES(google-url LINK_PRIVATE ${EXTERNAL_LIBRARIES})
-TARGET_LINK_LIBRARIES(google-url-static ${EXTERNAL_LIBRARIES})
+TARGET_LINK_LIBRARIES(googleurl LINK_PRIVATE ${EXTERNAL_LIBRARIES})
+TARGET_LINK_LIBRARIES(googleurl-static ${EXTERNAL_LIBRARIES})
 
-SET_TARGET_PROPERTIES(google-url google-url-static PROPERTIES
+SET_TARGET_PROPERTIES(googleurl googleurl-static PROPERTIES
                       CLEAN_DIRECT_OUTPUT 1)
 
-SET_TARGET_PROPERTIES(google-url-static PROPERTIES OUTPUT_NAME "google-url")
+SET_TARGET_PROPERTIES(googleurl-static PROPERTIES OUTPUT_NAME "googleurl")
 
 #SET(EXEC_SOURCES
 #  src/gurl_test_main.cc
@@ -60,10 +60,10 @@ SET_TARGET_PROPERTIES(google-url-static PROPERTIES OUTPUT_NAME "google-url")
 #  src/url_util_unittest.cc
 #)
 #
-#ADD_EXECUTABLE(google-url-test ${EXEC_SOURCES})
-#TARGET_LINK_LIBRARIES(google-url-test google-url)
+#ADD_EXECUTABLE(googleurl-test ${EXEC_SOURCES})
+#TARGET_LINK_LIBRARIES(googleurl-test googleurl)
 #
 #ADD_TEST(
-#  NAME google-url-test
-#  COMMAND google-url-test
+#  NAME googleurl-test
+#  COMMAND googleurl-test
 #)
