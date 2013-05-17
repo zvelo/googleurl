@@ -149,7 +149,7 @@ int DefaultPortForScheme(const char* scheme, int scheme_len) {
 }
 
 bool CanonicalizeStandardURL(const char* spec,
-                             int spec_len,
+                             int,
                              const url_parse::Parsed& parsed,
                              CharsetConverter* query_converter,
                              CanonOutput* output,
@@ -160,7 +160,7 @@ bool CanonicalizeStandardURL(const char* spec,
 }
 
 bool CanonicalizeStandardURL(const char16* spec,
-                             int spec_len,
+                             int,
                              const url_parse::Parsed& parsed,
                              CharsetConverter* query_converter,
                              CanonOutput* output,

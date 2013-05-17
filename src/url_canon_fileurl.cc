@@ -148,7 +148,7 @@ bool DoCanonicalizeFileURL(const URLComponentSource<CHAR>& source,
 } // namespace
 
 bool CanonicalizeFileURL(const char* spec,
-                         int spec_len,
+                         int,
                          const url_parse::Parsed& parsed,
                          CharsetConverter* query_converter,
                          CanonOutput* output,
@@ -159,7 +159,7 @@ bool CanonicalizeFileURL(const char* spec,
 }
 
 bool CanonicalizeFileURL(const char16* spec,
-                         int spec_len,
+                         int,
                          const url_parse::Parsed& parsed,
                          CharsetConverter* query_converter,
                          CanonOutput* output,

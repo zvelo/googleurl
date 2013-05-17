@@ -301,7 +301,7 @@ bool ConvertUTF8ToUTF16(const char* input, int input_len,
   return success;
 }
 
-void SetupOverrideComponents(const char* base,
+void SetupOverrideComponents(const char*,
                              const Replacements<char>& repl,
                              URLComponentSource<char>* source,
                              url_parse::Parsed* parsed) {
@@ -332,7 +332,7 @@ void SetupOverrideComponents(const char* base,
                       &source->ref, &parsed->ref);
 }
 
-bool SetupUTF16OverrideComponents(const char* base,
+bool SetupUTF16OverrideComponents(const char*,
                                   const Replacements<char16>& repl,
                                   CanonOutput* utf8_buffer,
                                   URLComponentSource<char>* source,

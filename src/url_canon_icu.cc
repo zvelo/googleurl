@@ -48,10 +48,10 @@ namespace {
 // append an escaped version of the numerical character reference for that code
 // point. It is of the form "&#1234;" and we will escape the non-digits to
 // "%26%231234%3B". Why? This is what Netscape did back in the olden days.
-void appendURLEscapedChar(const void* context,
+void appendURLEscapedChar(const void*,
                           UConverterFromUnicodeArgs* from_args,
-                          const UChar* code_units,
-                          int32_t length,
+                          const UChar*,
+                          int32_t,
                           UChar32 code_point,
                           UConverterCallbackReason reason,
                           UErrorCode* err) {

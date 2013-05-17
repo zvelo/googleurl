@@ -280,7 +280,11 @@ int CopyBaseDriveSpecIfNecessary(const char* base_url,
 template<typename CHAR>
 bool DoResolveRelativePath(const char* base_url,
                            const url_parse::Parsed& base_parsed,
+#ifdef WIN32
                            bool base_is_file,
+#else
+                           bool,
+#endif
                            const CHAR* relative_url,
                            const url_parse::Component& relative_component,
                            CharsetConverter* query_converter,

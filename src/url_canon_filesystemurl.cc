@@ -107,7 +107,7 @@ bool DoCanonicalizeFileSystemURL(const CHAR* spec,
 }  // namespace
 
 bool CanonicalizeFileSystemURL(const char* spec,
-                               int spec_len,
+                               int,
                                const url_parse::Parsed& parsed,
                                CharsetConverter* charset_converter,
                                CanonOutput* output,
@@ -118,7 +118,7 @@ bool CanonicalizeFileSystemURL(const char* spec,
 }
 
 bool CanonicalizeFileSystemURL(const char16* spec,
-                               int spec_len,
+                               int,
                                const url_parse::Parsed& parsed,
                                CharsetConverter* charset_converter,
                                CanonOutput* output,

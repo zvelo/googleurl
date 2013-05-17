@@ -92,7 +92,7 @@ bool DoCanonicalizeMailtoURL(const URLComponentSource<CHAR>& source,
 } // namespace
 
 bool CanonicalizeMailtoURL(const char* spec,
-                          int spec_len,
+                          int,
                           const url_parse::Parsed& parsed,
                           CanonOutput* output,
                           url_parse::Parsed* new_parsed) {
@@ -101,7 +101,7 @@ bool CanonicalizeMailtoURL(const char* spec,
 }
 
 bool CanonicalizeMailtoURL(const char16* spec,
-                           int spec_len,
+                           int,
                            const url_parse::Parsed& parsed,
                            CanonOutput* output,
                            url_parse::Parsed* new_parsed) {
