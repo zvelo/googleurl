@@ -22,6 +22,16 @@ SET(SOURCES
   src/url_util.cc
 )
 
+SET(HEADERS
+  base/string16.h
+  base/basictypes.h
+  src/gurl.h
+  src/url_canon.h
+  src/url_common.h
+  src/url_parse.h
+  src/url_canon_stdstring.h
+)
+
 INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR})
 INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR}/..)
 INCLUDE_DIRECTORIES(${ICU_INCLUDE_DIR})
@@ -35,12 +45,16 @@ SET(EXTERNAL_LIBRARIES
 ADD_LIBRARY(googleurl ${SOURCES})
 TARGET_LINK_LIBRARIES(googleurl ${EXTERNAL_LIBRARIES})
 
-
 INSTALL(
   TARGETS googleurl
   LIBRARY DESTINATION lib
   ARCHIVE DESTINATION lib
   PUBLIC_HEADER DESTINATION include/googleurl)
+
+FOREACH(header ${HEADERS})
+  GET_FILENAME_COMPONENT(currdir ${header} PATH)
+  INSTALL(FILES ${header} DESTINATION "include/googleurl/${currdir}")
+ENDFOREACH()
 
 #SET(EXEC_SOURCES
 #  src/gurl_test_main.cc
