@@ -50,6 +50,7 @@
 // libc functions with custom, 2-byte-char compatible routines. It is capable
 // of carrying UTF-16-encoded data.
 
+#include <cstdio>
 #include <string>
 
 #include "base/basictypes.h"
