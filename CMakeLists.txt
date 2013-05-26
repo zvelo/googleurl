@@ -23,12 +23,15 @@ SET(SOURCES
 )
 
 SET(HEADERS
+  base/logging.h
   base/string16.h
   base/basictypes.h
   src/gurl.h
+  src/url_util.h
   src/url_canon.h
-  src/url_common.h
   src/url_parse.h
+  src/url_common.h
+  src/url_canon_internal.h
   src/url_canon_stdstring.h
 )
 
