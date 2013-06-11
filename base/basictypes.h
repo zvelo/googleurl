@@ -3,15 +3,17 @@
 #ifndef BASE_BASICTYPES_H__
 #define BASE_BASICTYPES_H__
 
-typedef unsigned char  uint8;
-typedef unsigned short uint16;
-typedef unsigned int   uint32;
-typedef unsigned int   uint64;
+#include <stdint.h>
+
+typedef uint8_t  uint8;
+typedef uint16_t uint16;
+typedef uint32_t uint32;
+typedef uint64_t uint64;
 
 const uint8  kuint8max  = (( uint8) 0xFF);
 const uint16 kuint16max = ((uint16) 0xFFFF);
 const uint32 kuint32max = ((uint32) 0xFFFFFFFF);
-const uint64 kuint64max = ((uint64) 0xFFFFFFFFFFFFFFFF);
+const uint64 kuint64max = ((uint64) 0xFFFFFFFFFFFFFFFFULL);
 
 // The arraysize(arr) macro returns the # of elements in an array arr.
 // The expression is a compile-time constant, and therefore can be
